@@ -1,0 +1,4 @@
+theme: jekyll-theme-slate
+title: "Python Packaging"
+description: "SSC Compact Course"
+exclude: [notebooks, tests]
