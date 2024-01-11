@@ -1,0 +1,11 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "calculate"
+version = "0.0.1"
+dependencies = ["click"]
+
+[project.scripts]
+coinflip = "calculate.stats:flip_coin"
