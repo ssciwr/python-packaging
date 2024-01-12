@@ -18,8 +18,15 @@ TODO: make pure python example repo
 
 https://github.com/ssciwr/pybind11-numpy-example
 
-### Cookiecutter
+### Recommended resources
+
+- Pure Python packaging
+  - https://learn.scientific-python.org/development/guides/packaging-simple/
+- Python packaging with compiled extensions
+
+### Cookiecutters
 
 Cookiecutter for you to generate your own GitHub repo for a Python package:
 
-https://github.com/ssciwr/cookiecutter-python-package
+- https://github.com/ssciwr/cookiecutter-python-package
+- https://github.com/scientific-python/cookie
