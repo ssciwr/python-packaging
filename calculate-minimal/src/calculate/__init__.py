@@ -1,1 +1,1 @@
-import stats
+from .stats import flip_coin
