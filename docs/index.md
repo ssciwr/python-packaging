@@ -12,11 +12,17 @@ In this course we will learn how to package a Python library, how to publish it 
 
 ### Pure Python Package
 
-TODO: make pure python example repo
+- [calculate-minimal](https://github.com/ssciwr/python-packaging/tree/main/calculate-minimal)
+  - A bare-bones minimal Python package that can be locally installed
+- [calculate](https://github.com/ssciwr/python-packaging/tree/main/calculate)
+  - A better version of this Python package that can be published to PyPI
 
 ### Python with C++ compiled extensions
 
-https://github.com/ssciwr/pybind11-numpy-example
+- [pybind11-numpy-example](https://github.com/ssciwr/pybind11-numpy-example)
+  - a simple example of packaging including c++ compiled extensions
+- [hammingdist](https://github.com/ssciwr/hammingdist)
+  - a more advanced example with a compiled extension making use of OpenMP and CUDA
 
 ### Recommended resources
 
