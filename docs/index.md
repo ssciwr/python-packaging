@@ -8,7 +8,7 @@ In this course we will learn how to package a Python library, how to publish it 
 
 [download slides as pdf](https://github.com/ssciwr/effective-software-testing/raw/main/docs/slides/slides.pdf) | [course description](https://www.ssc.uni-heidelberg.de/en/compact-course-python-packaging)
 
-## Sample packages
+## Python Package Examples
 
 ### Pure Python Package
 
@@ -17,22 +17,21 @@ In this course we will learn how to package a Python library, how to publish it 
 - [calculate](https://github.com/ssciwr/python-packaging/tree/main/calculate)
   - A better version of this Python package that can be published to PyPI
 
-### Python with C++ compiled extensions
+### Python Package with C++ compiled extensions
 
 - [pybind11-numpy-example](https://github.com/ssciwr/pybind11-numpy-example)
   - a simple example of packaging including c++ compiled extensions
 - [hammingdist](https://github.com/ssciwr/hammingdist)
   - a more advanced example with a compiled extension making use of OpenMP and CUDA
 
-### Recommended resources
+## Recommended resources
 
 - Pure Python packaging
-  - https://learn.scientific-python.org/development/guides/packaging-simple/
+  - [Python Packaging Tutorial](https://packaging.python.org/en/latest/tutorials/packaging-projects)
+  - [Scientific Python Simple packaging](https://learn.scientific-python.org/development/guides/packaging-simple)
 - Python packaging with compiled extensions
-
-### Cookiecutters
-
-Cookiecutter for you to generate your own GitHub repo for a Python package:
-
-- https://github.com/ssciwr/cookiecutter-python-package
-- https://github.com/scientific-python/cookie
+  - [Scientific Python Compiled packaging](https://learn.scientific-python.org/development/guides/packaging-compiled)
+  - [scikit-build-core getting started](https://scikit-build-core.readthedocs.io/en/latest/getting_started.html)
+- Cookiecutters to generate your own GitHub repo for a Python package
+  - [ssciwr/cookiecutter-python-package](https://github.com/ssciwr/cookiecutter-python-package)
+  - [scientific-python/cookie](https://github.com/scientific-python/cookie)
