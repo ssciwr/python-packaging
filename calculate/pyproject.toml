@@ -5,7 +5,22 @@ build-backend = "hatchling.build"
 [project]
 name = "calculate"
 version = "0.0.1"
-dependencies = ["click"]
+dependencies = ["click", "numpy"]
+authors = [
+  { name="Liam Keegan", email="liam@keegan.ch" },
+]
+description = "A simple package to flip a coin or roll dice"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
 
 [project.scripts]
-coinflip = "calculate.stats:flip_coin"
+flip-coin = "calculate.cli:flip_coin_cli"
+roll-dice = "calculate.cli:roll_dice_cli"

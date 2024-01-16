@@ -1,7 +1,10 @@
 import random
-import click
+import numpy as np
 
 
-@click.command()
-def flip_coin():
+def flip_coin() -> str:
     return random.choice(["Heads", "Tails"])
+
+
+def roll_dice(n_dice: int, n_sides: int):
+    return np.random.randint(1, n_sides, n_dice)
