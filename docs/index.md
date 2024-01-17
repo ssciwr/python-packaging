@@ -32,6 +32,7 @@ In this course we will learn how to package a Python library, how to publish it 
 - Python packaging with compiled extensions
   - [Scientific Python Compiled packaging](https://learn.scientific-python.org/development/guides/packaging-compiled)
   - [scikit-build-core getting started](https://scikit-build-core.readthedocs.io/en/latest/getting_started.html)
+  - [pypackaging-native](https://pypackaging-native.github.io/)
 - Cookiecutters to generate your own GitHub repo for a Python package
   - [ssciwr/cookiecutter-python-package](https://github.com/ssciwr/cookiecutter-python-package)
   - [scientific-python/cookie](https://github.com/scientific-python/cookie)
