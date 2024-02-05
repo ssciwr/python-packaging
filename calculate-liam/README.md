@@ -12,7 +12,7 @@ Then you can install this package from test PyPI:
 
 `pip install -i https://test.pypi.org/simple/ calculate-liam`
 
-## Use
+## Python use
 
 ```python
 from calculate_liam import stats
@@ -20,4 +20,17 @@ from calculate_liam import stats
 print(stats.flip_coin())
 
 print(stats.roll_dice(n_dice=2, n_sides=12))
+```
+
+## Command line use
+
+```bash
+$ flip-coin
+Tails
+$ roll-dice --n-dice=2 --n-sides=12
+
+ 8
+
+ 5
+
 ```
