@@ -1,10 +1,16 @@
 # calculate-liam
 
-A simple example of a Python package.
+A simple example of a Python package from the [SSC Python Packaging course](https://ssciwr.github.io/python-packaging).
 
-## Local install
+## testPyPI install
 
-`pip install .`
+First ensure that the dependencies are installed from (real) PyPI:
+
+`pip install click numpy`
+
+Then you can install this package from test PyPI:
+
+`pip install -i https://test.pypi.org/simple/ calculate-liam`
 
 ## Use
 
