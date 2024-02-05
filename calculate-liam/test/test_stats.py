@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from calculate import stats
+from calculate_liam import stats
 
 
 def test_flip_coin():

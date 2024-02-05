@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "calculate"
+name = "calculate-liam"
 version = "0.0.1"
 dependencies = ["click", "numpy"]
 authors = [
@@ -22,5 +22,5 @@ classifiers = [
 test = ["pytest"]
 
 [project.scripts]
-flip-coin = "calculate.cli:flip_coin_cli"
-roll-dice = "calculate.cli:roll_dice_cli"
+flip-coin = "calculate_liam.cli:flip_coin_cli"
+roll-dice = "calculate_liam.cli:roll_dice_cli"

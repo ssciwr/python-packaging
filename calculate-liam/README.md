@@ -1,4 +1,4 @@
-# calculate
+# calculate-liam
 
 A simple example of a Python package.
 
@@ -9,7 +9,7 @@ A simple example of a Python package.
 ## Use
 
 ```python
-from calculate import stats
+from calculate_liam import stats
 
 print(stats.flip_coin())
 
