@@ -1,8 +1,9 @@
 # calculate-liam
 
-A simple example of a Python package from the [SSC Python Packaging course](https://ssciwr.github.io/python-packaging).
+A simple example of a Python package from the [SSC Python Packaging course](https://ssciwr.github.io/python-packaging),
+which is published on [testPyPI](https://test.pypi.org/project/calculate-liam/)
 
-## testPyPI install
+## install from testPyPI
 
 First ensure that the dependencies are installed from (real) PyPI:
 
@@ -34,3 +35,11 @@ $ roll-dice --n-dice=2 --n-sides=12
  5
 
 ```
+
+## automatic testPyPI publishing
+
+Tagged commits are automatically published on testPyPI using [this github action](https://github.com/ssciwr/python-packaging/blob/main/.github/workflows/pypi.yml)
+
+## conda-forge recipe
+
+An example recipe that could be used to submit this package to conda-forge is [meta.yaml](https://github.com/ssciwr/python-packaging/blob/main/calculate-liam/meta.yaml)

@@ -1,0 +1,47 @@
+{% set name = "calculate-liam" %}
+{% set version = "0.0.3" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/calculate_liam-{{ version }}.tar.gz
+  sha256: ad9fe95227ecae2e8d9c1151c5efd5367f4f3c9178670a7bd85a21e1ec300656
+
+build:
+  entry_points:
+    - flip-coin = calculate_liam.cli:flip_coin_cli
+    - roll-dice = calculate_liam.cli:roll_dice_cli
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.8
+    - hatchling
+    - pip
+  run:
+    - python >=3.8
+    - click
+    - numpy
+
+test:
+  imports:
+    - calculate_liam
+  commands:
+    - pip check
+    - flip-coin --help
+    - roll-dice --help
+  requires:
+    - pip
+
+about:
+  summary: An example package from the SSC Python Packaging course
+  license: MIT
+  license_file: LICENSE.md
+
+extra:
+  recipe-maintainers:
+    - lkeegan
