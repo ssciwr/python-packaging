@@ -6,7 +6,7 @@ In this course we will learn how to package a Python library, how to publish it 
 
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vT_Vn29jIR56s5mhC05Gasn3krbcw89fmG9TFEDn4Etmd5VhswnmdA0A8v5Z1aVqpvJtiUuvJSn7GDZ/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
-[download slides as pdf](https://github.com/ssciwr/effective-software-testing/raw/main/docs/slides/slides.pdf) | [course description](https://www.ssc.uni-heidelberg.de/en/compact-course-python-packaging)
+[download slides as pdf](https://github.com/ssciwr/python-packaging/raw/main/docs/slides/slides.pdf) | [course description](https://www.ssc.uni-heidelberg.de/en/compact-course-python-packaging)
 
 ## Python Package Examples
 
