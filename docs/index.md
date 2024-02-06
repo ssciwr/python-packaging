@@ -14,13 +14,15 @@ In this course we will learn how to package a Python library, how to publish it 
 
 - [calculate-minimal](https://github.com/ssciwr/python-packaging/tree/main/calculate-minimal)
   - A bare-bones minimal Python package that can be locally installed
-- [calculate](https://github.com/ssciwr/python-packaging/tree/main/calculate)
-  - A better version of this Python package that can be published to PyPI
+- [calculate-liam](https://github.com/ssciwr/python-packaging/tree/main/calculate-liam)
+  - A more complete version of this Python package that is [published on testPyPI](https://test.pypi.org/project/calculate-liam)
+  - This [github action](https://github.com/ssciwr/python-packaging/blob/main/.github/workflows/pypi.yml) automatically publishes new versions to testPyPI on tagged commits
 
 ### Python Package with C++ compiled extensions
 
 - [pybind11-numpy-example](https://github.com/ssciwr/pybind11-numpy-example)
   - a simple example of packaging including c++ compiled extensions
+  - an example [meta.yaml](https://github.com/conda-forge/staged-recipes/pull/25040/files) conda-forge recipe for this package
 - [hammingdist](https://github.com/ssciwr/hammingdist)
   - a more advanced example with a compiled extension making use of OpenMP and CUDA
 
