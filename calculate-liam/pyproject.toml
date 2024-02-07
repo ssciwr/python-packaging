@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "calculate-liam"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = ["click", "numpy"]
 authors = [
   { name="Liam Keegan", email="liam@keegan.ch" },
@@ -20,6 +20,7 @@ classifiers = [
 
 [project.urls]
 Github = "https://github.com/ssciwr/python-packaging"
+Homepage = "https://ssciwr.github.io/python-packaging"
 
 [project.optional-dependencies]
 test = ["pytest"]
