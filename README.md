@@ -12,4 +12,4 @@ Source code samples for the SSC compact course ["Python Packaging"](https://ssci
 ## calculate-liam
 
 - [calculate-liam](https://github.com/ssciwr/python-packaging/tree/main/calculate-liam) contains a more complete Python package
-- it is also automatically published to testPyPI using [this github action](https://github.com/ssciwr/python-packaging/blob/main/.github/workflows/pypi.yml)
+- it is also automatically published to [testPyPI](https://test.pypi.org/project/calculate-liam/) using [this github action](https://github.com/ssciwr/python-packaging/blob/main/.github/workflows/pypi.yml)
