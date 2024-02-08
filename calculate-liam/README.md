@@ -25,16 +25,7 @@ print(stats.roll_dice(n_dice=2, n_sides=12))
 
 ## Command line use
 
-```bash
-$ flip-coin
-Tails
-$ roll-dice --n-dice=2 --n-sides=12
-
- 8
-
- 5
-
-```
+![CLI gif](https://raw.githubusercontent.com/ssciwr/python-packaging/main/calculate-liam/docs/cli.gif)
 
 ## automatic testPyPI publishing
 
