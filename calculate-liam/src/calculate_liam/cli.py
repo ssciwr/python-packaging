@@ -16,4 +16,5 @@ def flip_coin_cli():
 def roll_dice_cli(n_dice, n_sides):
     click.echo("")
     for d in roll_dice(n_dice, n_sides):
-        click.secho(f" {d} \n", bold=True, bg="red")
+        click.secho(f" {d} ", bold=True, bg="red")
+        click.echo("")
