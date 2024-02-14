@@ -7,4 +7,4 @@ def flip_coin() -> str:
 
 
 def roll_dice(n_dice: int, n_sides: int):
-    return np.random.randint(1, n_sides, n_dice)
+    return np.random.randint(low=1, high=n_sides + 1, size=n_dice)
