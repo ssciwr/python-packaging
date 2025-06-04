@@ -1,5 +1,5 @@
 {% set name = "calculate-liam" %}
-{% set version = "0.0.3" %}
+{% set version = "0.0.8" %}
 
 package:
   name: {{ name|lower }}

@@ -23,6 +23,7 @@ In this course we will learn how to package a Python library, how to publish it 
 - [pybind11-numpy-example](https://github.com/ssciwr/pybind11-numpy-example)
   - a simple example of packaging including c++ compiled extensions
   - an example [meta.yaml](https://github.com/conda-forge/staged-recipes/pull/25040/files) conda-forge recipe for this package
+  - the resulting [conda-forge feedstock](https://github.com/conda-forge/pybind11-numpy-example-feedstock) for this package
 - [hammingdist](https://github.com/ssciwr/hammingdist)
   - a more advanced example with a compiled extension making use of OpenMP and CUDA
 
