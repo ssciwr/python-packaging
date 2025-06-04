@@ -1,6 +1,12 @@
 name: PyPI publishing
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   pypi:
@@ -18,5 +24,22 @@ jobs:
       - if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          # to publish to the real PyPI remove this repository-url line:
           repository-url: https://test.pypi.org/legacy/
           verbose: true
+  test:
+    runs-on: ${{ matrix.os }}
+    name: "${{ matrix.os }} :: ${{ matrix.python-version }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        python-version: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      # install the calculate-liam package including the optional test dependencies
+      - run: pip install -e .[test]
+        working-directory: calculate-liam
+      # run the test suite
+      - run: pytest -v
+        working-directory: calculate-liam/test
