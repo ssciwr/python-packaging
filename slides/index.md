@@ -8,6 +8,7 @@ description: SSC Compact Course
 
 <!-- _class: title -->
 <!-- _paginate: false -->
+<!-- _footer: "Last updated: 2026-05-19" -->
 
 # Python Packaging
 
@@ -51,21 +52,25 @@ Our goal today is to present a practical and modern approach to packaging and di
 
 # Course slides and code
 
-You will find slides and code samples for this course at:
+You will find the slides for this course at:
 
 ## [ssciwr.github.io/python-packaging](https://ssciwr.github.io/python-packaging)
 
-It will be helpful to keep this open in a browser tab during the course.
+See also the GitHub repository:
 
-This page also contains
+## [github.com/ssciwr/python-packaging](https://github.com/ssciwr/python-packaging)
+
+This contains example code, as well as
 
 - Links to example repositories
 - Links to recommended resources
 - Links to cookiecutters to create your own projects
 
+It will be helpful to keep this open in a browser tab during the course.
+
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # Packaging Overview
 
@@ -201,7 +206,7 @@ Combining these allows us to publish a "Distribution package" to a repository su
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # A Minimal Python Package
 
@@ -220,7 +225,7 @@ conda create -n packaging python
 conda activate packaging
 ```
 
-A minimal version of this package is available here:
+For future reference, the minimal package we will create now is also available here:
 
 [github.com/ssciwr/python-packaging/tree/main/calculate-minimal](https://github.com/ssciwr/python-packaging/tree/main/calculate-minimal)
 
@@ -287,7 +292,7 @@ This is a configuration file in TOML format that contains three sections:
 
 ---
 
-# pyproject.toml: build-system
+# pyproject.toml: `[build-system]`
 
 Specifies what build system should be used to build and install your package, and any packages that are required to be installed to do this.
 
@@ -305,7 +310,7 @@ They all offer the same basic functionality, differ only in advanced features.
 
 ---
 
-# pyproject.toml: project
+# pyproject.toml: `[project]`
 
 Specifies project metadata and dependencies.
 
@@ -341,7 +346,7 @@ version = "0.0.1"
 
 # Bare-bones package
 
-We now have a very minimal but installable Python package.
+We now have a very minimal but installable Python package, which should look like this one:
 
 [github.com/ssciwr/python-packaging/tree/main/calculate-minimal](https://github.com/ssciwr/python-packaging/tree/main/calculate-minimal)
 
@@ -390,7 +395,7 @@ This installs links to your source files instead of copying them, so that any ch
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # PyPI: Python Package Index
 
@@ -468,9 +473,9 @@ Tip: check PyPI (and conda-forge if relevant) before choosing a name for your pa
 # Choose a name for our package
 
 - We need a name that isn't already in use
-- Suggestion: append your name, e.g.
-  - PyPI name: `calculate-name`
-  - Python package name: `calculate_name`
+- Suggestion: append your name, e.g. in my case
+  - PyPI name: `calculate-liam`
+  - Python package name: `calculate_liam`
 - Check it is not taken on [test.pypi.org](https://test.pypi.org)
 - Update your folder names, code and pyproject.toml accordingly
 - Check that installing and importing the package still works
@@ -486,23 +491,19 @@ Let's add some new functionality that uses numpy
 ```python
 # stats.py
 
-import random
 import numpy as np
-
 
 def roll_dice(n_dice: int, n_sides: int):
     return np.random.randint(1, n_sides, n_dice)
 
-
 def flip_coin():
-    return random.choice(["Heads", "Tails"])
+    return np.random.choice(["Heads", "Tails"])
 ```
 
 ```python
 # __init__.py
 
-from .stats import flip_coin
-from .stats import roll_dice
+from .stats import flip_coin, roll_dice
 ```
 
 ---
@@ -514,18 +515,36 @@ Any packages listed in dependencies will automatically be installed when your pa
 ```toml
 [project]
 ...
-dependencies = ["numpy"]
+dependencies = ["numpy", "pandas", "xarray"]
 ...
 ```
 
 You can also add more specific version/os/etc requirements here, e.g.
 
 ```toml
-dependencies = ["numpy >= 1.16, < 2.0.0"]
+dependencies = [
+    "numpy >= 1.16, < 2.0.0",
+    "pywin32; sys_platform == 'win32'",
+]
 ```
 
 Much more information about this here:
 [packaging.python.org/en/latest/specifications/dependency-specifiers/#dependency-specifiers](https://packaging.python.org/en/latest/specifications/dependency-specifiers/#dependency-specifiers)
+
+---
+
+<!-- _class: hands-on -->
+
+# Add numpy to pyproject.toml dependencies
+
+Let's add numpy to our project dependencies:
+
+```toml
+[project]
+...
+dependencies = ["numpy"]
+...
+```
 
 ---
 
@@ -549,47 +568,46 @@ pip install -e .
 
 # Recommended project structure: src layout
 
-```text
+```toml
 /calculate-liam
     /src
-        /calculate_liam
+        /calculate_liam    # this is the installed importable package
             __init__.py
             stats.py
             …
-    pyproject.toml
+
+
+
+
+
+
+    pyproject.toml         # defines how to install the package
+
+
 ```
 
-- `src/calculate_liam/` — any code that should be importable goes here, this is the Python package
-- `pyproject.toml` — defines how to install the package
-
-See [packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout) for more information.
 
 ---
 
 # Recommended project structure: src layout
 
-```text
+```toml
 /calculate-liam
     /src
-        /calculate_liam
+        /calculate_liam    # this is the installed importable package
             __init__.py
             stats.py
             …
-    /tests
+    /tests                 # tests are part of the project but not the package
         __init__.py
-        test_stats.py
+        test_stats.py      # include a test file for every source file
         …
-    /docs
+    /docs                  # docs are part of the project but not the package
         …
-    pyproject.toml
-    README.md
-    LICENSE
+    pyproject.toml         # defines how to install the package
+    README.md              # all projects should have a readme
+    LICENSE                # all projects should have a license
 ```
-
-- `src/calculate_liam/` — the Python package
-- `tests/`, `docs/` — part of the project but not part of the Python package
-- `pyproject.toml` — defines how to install the package
-- All projects should have a README and a license
 
 ---
 
@@ -610,7 +628,7 @@ def test_flip_coin():
     assert coin in ["Heads", "Tails"]
 ```
 
-We don't want to make this a dependency of our package, as most users presumably won't want to run our tests. But it would be good to specify what additional dependencies are required to run the tests.
+We don't want to make pytest a dependency of our package, as most users presumably won't want to run our tests. But it would be good to specify what additional dependencies are required to run the tests.
 
 ---
 
@@ -637,20 +655,22 @@ This does an editable install using the pyproject.toml from the current director
 
 # Sidenote: dependency groups
 
-A new alternative way to do this is with dependency groups:
+A new alternative way to specify development dependencies is with dependency groups:
 
 ```toml
 [dependency-groups]
-test = ["pytest"]
+dev = ["pytest"]
 ```
 
-The pip install command would then be:
+The pip install command to include the dev dependency group would then be:
 
 ```console
-pip install -e . --group test
+pip install -e . --group dev
 ```
 
-Note this requires a very recent (25.1+) version of pip.
+Note this requires a fairly recent (25.1+) version of pip.
+
+This can be a good approach if you are using [uv](https://docs.astral.sh/uv), as the dev dependency group is [synced by default](https://docs.astral.sh/uv/concepts/projects/dependencies/#default-groups)
 
 ---
 
@@ -672,6 +692,8 @@ def flip_coin_cli():
     click.echo(flip_coin())
 ```
 
+Don't forget to add the click library to our list of dependencies!
+
 ---
 
 <!-- _class: hands-on -->
@@ -685,25 +707,26 @@ Script entry points can be specified as "package.module:function", e.g.
 flip-coin = "calculate_liam.cli:flip_coin_cli"
 ```
 
-This will install a `flip-coin` command which will call the `flip_coin_cli` function:
+If you install the package again (`pip install -e .`) it will now install a `flip-coin` command which will call the `flip_coin_cli` function:
 
 ```console
 $ flip-coin
 Heads
 ```
 
-Note that we also need to add the "click" library to our list of dependencies.
 
 ---
 
 # Specify a minimum Python version
+
+<!-- _class: hands-on -->
 
 Requirements can be set for the allowed Python versions:
 
 ```toml
 [project]
 ...
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 ...
 ```
 
@@ -712,6 +735,8 @@ You can also set a maximum allowed version here, but this is not recommended (e.
 ---
 
 # Metadata in pyproject.toml
+
+<!-- _class: hands-on -->
 
 Finally we add some project metadata that will be displayed by PyPI
 
@@ -762,6 +787,8 @@ license = { text = "MIT" }
 
 # Links in pyproject.toml
 
+<!-- _class: hands-on -->
+
 Project urls can also be added. You can choose any text for the labels, and PyPI will try to pick a suitable icon for the link based on your label and the url address:
 
 ```toml
@@ -778,9 +805,7 @@ These appear on your project's PyPI page under "Project links".
 
 # Complete package
 
-We now have a more complete package which is ready to publish:
-
-[github.com/ssciwr/python-packaging/tree/main/calculate-liam](https://github.com/ssciwr/python-packaging/tree/main/calculate-liam)
+We now have a more complete package which is ready to publish, consisting of these files:
 
 - `src/calculate_liam/`
   - `__init__.py`
@@ -792,6 +817,8 @@ We now have a more complete package which is ready to publish:
 - `LICENSE.md`
 - `README.md`
 - `pyproject.toml`
+
+See [github.com/ssciwr/python-packaging/tree/main/calculate-liam](https://github.com/ssciwr/python-packaging/tree/main/calculate-liam) for an example.
 
 ---
 
@@ -860,15 +887,9 @@ When prompted enter `__token__` for the user and your API key (which should star
 
 # Your package on (test)PyPI
 
-Your package is now published on testPyPI and visible at:
+![width:600px drop-shadow](testpypi.png)
 
 [test.pypi.org/project/calculate-liam](https://test.pypi.org/project/calculate-liam)
-
-The project page shows:
-
-- The project description (rendered from your README)
-- The project links you configured in pyproject.toml
-- All released versions and their files
 
 ---
 
@@ -895,7 +916,7 @@ pip install -i https://test.pypi.org/simple calculate-liam
 
 # Real PyPI publishing
 
-Publishing to the real PyPI index works in exactly the same way, the only difference is to not specify the test.pypi.org repository, and use an API key from your PyPI account:
+Publishing to the real PyPI index works in exactly the same way, the only difference is to not specify the test.pypi.org repository, and use an API key from your real PyPI account:
 
 ```console
 python -m build
@@ -910,26 +931,15 @@ pip install calculate-liam
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # Including resources
-
----
-
-# Including resources
-
-At some point you may want to include other files or resources in your package, e.g. image files, data files, etc.
-
-There are two aspects to this:
-
-- Ensuring the files are installed as part of your package
-  - How to do this depends on your choice of backend
-- Locating and accessing files from your package
-  - Many ways to do this, we'll cover three reasonable options
 
 ---
 
 # Installing resources
+
+At some point you may want to include other files or resources in your package, e.g. image files, data files, etc.
 
 To have a file installed as part of our package, all we have to do is add the file to our `src` folder, and it will be automatically installed.
 
@@ -973,7 +983,7 @@ This is the simplest option, but can fail in some (unusual) edge cases:
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # Automated PyPI publishing
 
@@ -1005,7 +1015,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: pipx run build calculate-liam -o dist
       - run: pipx run twine check dist/*
       - if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
@@ -1038,22 +1048,11 @@ Configuration fields on the PyPI side:
 
 [github.com/ssciwr/python-packaging/tree/main/calculate-liam](https://github.com/ssciwr/python-packaging/tree/main/calculate-liam)
 
-The action job runs the following steps on push:
-
-- Set up job
-- Build `pypa/gh-action-pypi-publish@release/v1`
-- Run `actions/checkout@v4`
-- Run `pipx run build calculate-liam -o dist`
-- Run `pipx run twine check dist/*`
-- Run `pypa/gh-action-pypi-publish@release/v1`
-- Post Run `actions/checkout@v4`
-- Complete job
-
-On a tagged commit, the resulting release is published on testPyPI.
+For a tagged commit, the action job builds and publishes the package to testPyPI.
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # Conda-forge
 
@@ -1188,7 +1187,7 @@ To submit a new package to conda-forge:
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # Compiled extension modules
 
@@ -1424,7 +1423,7 @@ requirements:
 
 ---
 
-<!-- _class: section -->
+<!-- _class: subtitle -->
 
 # Summary
 
