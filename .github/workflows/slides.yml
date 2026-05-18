@@ -1,0 +1,38 @@
+name: Slides
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+      - run: npm install --global @marp-team/marp-cli
+      - run: marp slides/index.md -o slides/index.html
+      - run: marp slides/index.md --pdf -o slides/slides.pdf
+      - run: marp slides/index.md --image png -o slides/slides-thumb.png
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./slides
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v5
