@@ -606,7 +606,7 @@ pip install -e .
         …
     pyproject.toml         # defines how to install the package
     README.md              # all projects should have a readme
-    LICENSE                # all projects should have a license
+    LICENSE.md             # all projects should have a license
 ```
 
 ---
@@ -748,38 +748,35 @@ authors = [
 ]
 description = "A simple package to flip a coin or roll dice"
 readme = "README.md"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+license = "MIT"
+license-files = ["LICENSE.md"]
 ...
 ```
 
 ---
 
-# License in pyproject.toml
+# Licenses in pyproject.toml
 
-We specified our license using a classifier (see [pypi.org/classifiers](https://pypi.org/classifiers/)):
+We specified our license using the [SPDX identifier](https://spdx.org/licenses/) "MIT" and pointed to the license file:
 
 ```toml
-[project]
+license = "MIT"
+license-files = ["LICENSE.md"]
+```
+
+This is the current recommended way to specify the license (see [PEP 639](https://peps.python.org/pep-0639)).
+
+Here are some older (deprecated) alternatives you may see:
+
+```toml
 classifiers = [..., "License :: OSI Approved :: MIT License", ...]
 ```
 
-This is the preferred method if there is a classifier available for your license.
-
-Alternatively you can instead point to your license file:
-
 ```toml
-[project]
 license = { file = "LICENSE.txt" }
 ```
 
-Or simply provide the license as plain text:
-
 ```toml
-[project]
 license = { text = "MIT" }
 ```
 
