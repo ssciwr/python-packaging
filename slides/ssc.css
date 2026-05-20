@@ -187,3 +187,9 @@ section.hands-on {
     var(--ssc-logo) no-repeat top 26px right 36px / 70px auto,
     var(--ssc-blue-bar) var(--ssc-bg);
 }
+
+section img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

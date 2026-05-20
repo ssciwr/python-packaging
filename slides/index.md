@@ -8,7 +8,7 @@ description: SSC Compact Course
 
 <!-- _class: title -->
 <!-- _paginate: false -->
-<!-- _footer: "Last updated: 2026-05-19" -->
+<!-- _footer: "Last updated: 2026-05-22" -->
 
 # Python Packaging
 
@@ -91,7 +91,7 @@ def flip_coin():
 ```
 
 ```console
-Python 3.12.1
+Python 3.14.3
 >>> import stats
 >>> stats.flip_coin()
 'Tails'
@@ -118,11 +118,15 @@ from .stats import flip_coin
 ```
 
 ```console
-Python 3.12.1
+Python 3.14.3
 >>> import calculate
 >>> calculate.flip_coin()
 'Heads'
 ```
+
+---
+
+# What else is required?
 
 ---
 
@@ -212,18 +216,24 @@ Combining these allows us to publish a "Distribution package" to a repository su
 
 ---
 
-<!-- _class: hands-on -->
+# A note on uv
+
+In this course we'll use [uv](https://docs.astral.sh/uv) to manage our virtual environment and to install, build and publish our package.
+
+To install uv see [docs.astral.sh/uv/getting-started/installation](https://docs.astral.sh/uv/getting-started/installation).
+
+Note the use of uv is optional, everything we do could also be done using pip, build and twine:
+
+- `uv sync` → `python -m venv .venv && source .venv/bin/activate && pip install -e .`
+- `uv build` → `python -m build`
+- `uv publish` → `twine upload dist/*`
+
+
+---
 
 # calculate
 
 We'll now create a bare-bones Python package "calculate" from scratch.
-
-Recommended: create a new conda environment to work in:
-
-```console
-conda create -n packaging python
-conda activate packaging
-```
 
 For future reference, the minimal package we will create now is also available here:
 
@@ -350,13 +360,15 @@ We now have a very minimal but installable Python package, which should look lik
 
 [github.com/ssciwr/python-packaging/tree/main/calculate-minimal](https://github.com/ssciwr/python-packaging/tree/main/calculate-minimal)
 
-From the top level directory (that contains pyproject.toml) we can now install the package using pip with the command
+From the top level directory (that contains pyproject.toml) we can now install the package using
 
 ```console
-pip install .
+uv sync
 ```
 
-Here pip is the "build frontend" tool that calls the "build backend" tool we specified in pyproject.toml to build and install the package.
+This creates a virtual environment in `.venv/`, installs our package into it, and generates a `uv.lock` file recording the exact dependency versions.
+
+Behind the scenes uv acts as a "build frontend" — it calls the "build backend" we specified in pyproject.toml to build and install the package.
 
 ---
 
@@ -364,15 +376,13 @@ Here pip is the "build frontend" tool that calls the "build backend" tool we spe
 
 # Bare-bones package
 
-We should now be able to import and use our package in Python
+We can use `uv run` to run commands inside the project's virtual environment, e.g. to import and use our package in Python:
 
 ```console
-Python 3.12.1
+$ uv run python
 >>> import calculate
 >>> calculate.flip_coin()
 'Heads'
->>> calculate.__file__
-'/home/lkeegan/micromamba/envs/python-packaging/lib/python3.12/site-packages/calculate/__init__.py'
 ```
 
 ---
@@ -381,17 +391,15 @@ Python 3.12.1
 
 # Sidenote: editable install
 
-When we `import calculate` in Python, we now get the installed package.
+`uv sync` installs our package as an "editable" install by default — instead of copying our source files to the install location, it installs links to them. Any changes we make to the source code are immediately reflected when we import the package, with no need to reinstall.
 
-While we are developing the code though, we might want to make a change to the code and then import the modified package without having to install it again with each change.
-
-The way to do this conveniently is to do an "editable" install with `-e`:
+With pip, the equivalent is to pass `-e`:
 
 ```console
 pip install -e .
 ```
 
-This installs links to your source files instead of copying them, so that any changes you make are also applied to the installed package.
+A non-editable install (`uv pip install .` or `pip install .`) copies the source files at install time, so subsequent code changes are not picked up until the package is reinstalled.
 
 ---
 
@@ -546,27 +554,15 @@ dependencies = ["numpy"]
 ...
 ```
 
----
+Note that you can also do this using uv with:
 
-<!-- _class: hands-on -->
-
-# Installation dependencies
-
-If you did an editable install of your package, you can already try to use the new `roll_dice` function without installing the package again, but you may get a ModuleNotFoundError:
-
-```console
-ModuleNotFoundError: No module named 'numpy'
-```
-
-This is because numpy was not a dependency when you installed your package. Whenever you add a dependency to your pyproject.toml, you need to install your package again to install the new dependencies (even for an editable install):
-
-```console
-pip install -e .
+```bash
+uv add numpy
 ```
 
 ---
 
-# Recommended project structure: src layout
+# Anything still missing?
 
 ```toml
 /calculate-liam
@@ -575,7 +571,6 @@ pip install -e .
             __init__.py
             stats.py
             …
-
 
 
 
@@ -589,7 +584,7 @@ pip install -e .
 
 ---
 
-# Recommended project structure: src layout
+# Minimal project structure
 
 ```toml
 /calculate-liam
@@ -599,7 +594,6 @@ pip install -e .
             stats.py
             …
     /tests                 # tests are part of the project but not the package
-        __init__.py
         test_stats.py      # include a test file for every source file
         …
     /docs                  # docs are part of the project but not the package
@@ -613,7 +607,7 @@ pip install -e .
 
 <!-- _class: hands-on -->
 
-# Adding an optional dependency
+# Adding a development dependency
 
 Let's add a unit test that uses the pytest library
 
@@ -628,49 +622,51 @@ def test_flip_coin():
     assert coin in ["Heads", "Tails"]
 ```
 
-We don't want to make pytest a dependency of our package, as most users presumably won't want to run our tests. But it would be good to specify what additional dependencies are required to run the tests.
+We don't want to make pytest a runtime dependency of our package, as users presumably won't want to run our tests. But it would be good to specify what additional dependencies are required for development.
 
 ---
 
 <!-- _class: hands-on -->
 
-# Optional dependencies in pyproject.toml
+# Dependency groups
 
-Optional dependencies have a name and a list of dependencies
-
-```toml
-[project.optional-dependencies]
-test = ["pytest"]
-```
-
-At install time, optional dependencies can be added using square brackets
-
-```console
-pip install -e .[test]
-```
-
-This does an editable install using the pyproject.toml from the current directory, and also installs the optional "test" dependencies.
-
----
-
-# Sidenote: dependency groups
-
-A new alternative way to specify development dependencies is with dependency groups:
+For dependencies only needed during development (e.g. pytest), use a `[dependency-groups]` section:
 
 ```toml
 [dependency-groups]
 dev = ["pytest"]
 ```
 
-The pip install command to include the dev dependency group would then be:
+Again, instead of editing pyproject.toml you can do this with uv:
 
 ```console
-pip install -e . --group dev
+uv add --dev pytest
 ```
 
-Note this requires a fairly recent (25.1+) version of pip.
+The `dev` group is synced by default — `uv run` will pick up the new dependency and run the tests:
 
-This can be a good approach if you are using [uv](https://docs.astral.sh/uv), as the dev dependency group is [synced by default](https://docs.astral.sh/uv/concepts/projects/dependencies/#default-groups)
+```console
+uv run pytest
+```
+
+(With pip the equivalent is: `pip install -e . --group dev`)
+
+---
+
+# Optional dependencies (extras)
+
+There is a separate `[project.optional-dependencies]` section, intended for *user-facing* optional features (e.g. an optional GPU backend a user might want to enable):
+
+```toml
+[project.optional-dependencies]
+plotting = ["matplotlib"]
+```
+
+The user can then opt in at install time using square brackets:
+
+```console
+uv pip install "my-package[plotting]"
+```
 
 ---
 
@@ -707,13 +703,12 @@ Script entry points can be specified as "package.module:function", e.g.
 flip-coin = "calculate_liam.cli:flip_coin_cli"
 ```
 
-If you install the package again (`pip install -e .`) it will now install a `flip-coin` command which will call the `flip_coin_cli` function:
+Now when our package is installed it will also install a `flip-coin` command which will call the `flip_coin_cli` function:
 
 ```console
-$ flip-coin
+$ uv run flip-coin
 Heads
 ```
-
 
 ---
 
@@ -823,29 +818,25 @@ See [github.com/ssciwr/python-packaging/tree/main/calculate-liam](https://github
 
 # build
 
-First make sure we have up-to-date versions of pip, build and twine:
+To build distributable artifacts for our package, run uv build in the directory that contains pyproject.toml:
 
 ```console
-pip install --upgrade pip build twine
+uv build
 ```
 
-Now run build in the directory that contains pyproject.toml
+This generates a compressed "source distribution" and one or more "build distribution" wheel files in a directory named `dist/`.
 
-```console
-python -m build
-```
-
-`build` is a frontend build tool, like pip, but instead of installing your package it should generate a compressed "source distribution" as well as one or more "build distribution" wheel files in a directory named `dist/`.
+Here uv acts as a "build frontend" — similar to when we ran `uv sync`, but instead of installing the package locally it produces redistributable artifacts.
 
 ---
 
 # Wheel and source distributions
 
-The `.tar.gz` file is a "source distribution" — if you decompress it you will find all the files from your project, and you can then do `pip install .` to install your package from these files.
+The `.tar.gz` file is a "source distribution" — if you decompress it you will find all the files from your project, and you can then install your package from these files (e.g. `uv pip install .` or `pip install .`).
 
 The `.whl` file is a "built distribution" or Wheel — essentially a zip file containing only the files that need to be installed to use your package. In general these wheels can also contain pre-compiled extension modules, and in this case there may be a separate wheel for each Python version and operating system.
 
-Both these distributions get uploaded to PyPI, and pip install will always prefer to install from a wheel, only falling back to the source distribution if no suitable wheel exists.
+Both these distributions get uploaded to PyPI, and pip / uv will always prefer to install from a wheel, only falling back to the source distribution if no suitable wheel exists.
 
 ---
 
@@ -867,18 +858,15 @@ Generate an API key
 
 <!-- _class: hands-on -->
 
-# Upload to (test)PyPI with twine
+# Upload to (test)PyPI
 
 To upload the source and built distributions that were generated in the dist folder to the testPyPI repository:
 
 ```console
-python -m twine upload --repository testpypi dist/*
+uv publish --publish-url https://test.pypi.org/legacy/ --token pypi-abc123etc
 ```
 
-When prompted enter `__token__` for the user and your API key (which should start with "pypi-") for the password:
-
-- Username: `__token__`
-- Password: `pypi-abc123etc`
+Use the API key you generated (which should start with `pypi-`) as the token. You can also set it via the `UV_PUBLISH_TOKEN` environment variable instead of passing it on the command line.
 
 ---
 
@@ -894,36 +882,35 @@ When prompted enter `__token__` for the user and your API key (which should star
 
 # Install your package from (test)PyPI
 
-To install the package from testPyPI, use pip, specifying the testPyPI url for the `index-url`, and PyPI for the `extra-index-url`:
+To install the package from testPyPI, specify the testPyPI url for the `index-url`, and PyPI for the `extra-index-url`:
 
 ```console
-pip install -i https://test.pypi.org/simple --extra-index-url https://pypi.org/simple calculate-liam
+uv pip install -i https://test.pypi.org/simple --extra-index-url https://pypi.org/simple --index-strategy unsafe-best-match calculate-liam
 ```
 
-The `extra-index-url` tells pip to go look for your dependencies in the real PyPI index if they are not available on testPyPI.
+The `extra-index-url` tells uv to look in the real PyPI index for any of our dependencies that are not available on testPyPI.
 
-An alternative to `extra-index-url` is to first manually install any dependencies:
+Or try out the CLI directly with `uvx`, without installing the package into the current environment:
 
 ```console
-pip install click numpy pytest
-pip install -i https://test.pypi.org/simple calculate-liam
+uvx --from calculate-liam --index https://test.pypi.org/simple --index-strategy unsafe-best-match flip-coin
 ```
 
 ---
 
 # Real PyPI publishing
 
-Publishing to the real PyPI index works in exactly the same way, the only difference is to not specify the test.pypi.org repository, and use an API key from your real PyPI account:
+Publishing to the real PyPI index works in exactly the same way, the only difference is to not specify the test.pypi.org repository, and to use an API key from your real PyPI account:
 
 ```console
-python -m build
-python -m twine upload dist/*
+uv build
+uv publish --token pypi-abc123etc
 ```
 
-Pip uses the PyPI index by default, so installing a package that you publish on PyPI works just like installing any other package on PyPI:
+uv (and pip) use the real PyPI index by default, so installing a package that we publish on PyPI works just like installing any other package on PyPI:
 
 ```console
-pip install calculate-liam
+uv pip install calculate-liam
 ```
 
 ---
@@ -951,16 +938,24 @@ Note that this does **not** apply to the setuptools backend!
 
 # Locating resources
 
-As of Python 3.9 `importlib.resources` is available as part of the standard library, which is the recommended way of locating resources:
+To access your file at runtime use `importlib.resources`:
 
 ```python
 from importlib import resources
 
-filename = resources.files("calculate_liam") / "myfile.txt"
+resource = resources.files("calculate_liam") / "myfile.txt"
+with resource.open("r") as f:
+    ...
 ```
 
-(If you need to support older Python versions you can add the backported `importlib_resources` library as a dependency and use this instead)
+`resources.files()` returns a `Traversable`, not a `pathlib.Path`, but it does support `/` for joining, `.read_text()` and `.read_bytes()` and `.open()`.
 
+If you need a filesystem path you can use `.as_file()` instead of open:
+
+```python
+with resources.as_file(resource) as path:
+    ...
+```
 ---
 
 # Locating resources (alternative)
@@ -1013,8 +1008,9 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-      - run: pipx run build calculate-liam -o dist
-      - run: pipx run twine check dist/*
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build calculate-liam -o dist
+      - run: uvx twine check dist/*
       - if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -1154,19 +1150,18 @@ extra:
 Most of this metadata is already in our pyproject.toml, and in fact there is a tool called `grayskull` which can automatically generate a conda-forge recipe for a package that is already published on PyPI:
 
 ```console
-pip install grayskull
-grayskull pypi --strict-conda-forge package_name
+uvx grayskull pypi --strict-conda-forge package_name
 ```
 
 For a package on testPyPI we also need to specify the testPyPI url:
 
 ```console
-grayskull pypi --pypi-url https://test.pypi.org/pypi calculate-liam
+uvx grayskull pypi --pypi-url https://test.pypi.org/pypi calculate-liam
 ```
 
 ---
 
-# Minimal Workflow
+# Conda-forge submission workflow
 
 To submit a new package to conda-forge:
 
@@ -1176,7 +1171,7 @@ To submit a new package to conda-forge:
   - `git checkout -b calculate_liam`
 - Run grayskull from the staged-recipes/recipes folder
   - `cd recipes`
-  - `grayskull pypi --strict-conda-forge --pypi-url https://test.pypi.org/pypi calculate-liam`
+  - `uvx grayskull pypi --strict-conda-forge --pypi-url https://test.pypi.org/pypi calculate-liam`
 - Check/modify the generated meta.yaml (e.g. add tests)
 - Check the build works locally
   - `cd .. && python build-locally.py`
@@ -1274,7 +1269,6 @@ PYBIND11_MODULE(example, m) {
 cmake_minimum_required(VERSION 3.16...4.3)
 project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
 
-set(PYBIND11_NEWPYTHON ON)
 find_package(pybind11 CONFIG REQUIRED)
 
 pybind11_add_module(example example.cpp)
@@ -1325,18 +1319,11 @@ version = "0.0.1"
 
 # cibuildwheel
 
-For each version of Python, on each of Linux / macOS / Windows, cibuildwheel:
+For each version of Python, each operating system, and each hardware architecture, cibuildwheel does the following:
 
-1. Copies your project into a container (Linux only — uses a Manylinux container)
-2. Installs the target Python
-3. Builds a wheel
-4. Repairs the wheel
-   - `auditwheel` on Linux
-   - `delocate` on macOS
-5. (optional) Installs the wheel in a fresh virtualenv and runs your tests
-6. Copies the wheel out
+![width:600px drop-shadow](cibuildwheel.png)
 
-The result: one wheel per (OS × Python version) combination, ready to upload to PyPI.
+The result: around 30-40 wheels (one per OS/arch/Python version), ready to upload to PyPI.
 
 ---
 
@@ -1353,10 +1340,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.23
-      - uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: pypa/cibuildwheel@v3.4
+      - uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
