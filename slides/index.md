@@ -8,7 +8,7 @@ description: SSC Compact Course
 
 <!-- _class: title -->
 <!-- _paginate: false -->
-<!-- _footer: "Last updated: 2026-05-22" -->
+<!-- _footer: "Last updated: 2026-06-15" -->
 
 # Python Packaging
 

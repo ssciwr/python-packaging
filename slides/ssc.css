@@ -147,6 +147,7 @@ section.subtitle strong {
 section.title {
   background:
     var(--ssc-title-logo) no-repeat top 50px right 60px / 500px auto,
+    url("qr.svg") no-repeat bottom 50px left 60px / 180px 180px,
     var(--ssc-blue-bar) var(--ssc-dark-bg);
   padding: 60px 90px 50px;
 }

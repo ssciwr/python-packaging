@@ -141,3 +141,4 @@ cython_debug/
 slides/*.html
 slides/slides.pdf
 slides/slides-thumb.png
+slides/qr.svg
