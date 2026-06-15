@@ -19,7 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
-      - run: npm install --global @marp-team/marp-cli
+      - run: npm install --global @marp-team/marp-cli qrcode
+      - name: Generate QR code
+        shell: bash
+        run: |
+          slides_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          qrcode --error Q --qzone 4 \
+            --darkcolor 3a9ebfff --lightcolor 1f2a30ff \
+            --output slides/qr.svg "${slides_url}"
       - run: marp slides/index.md -o slides/index.html
       - run: marp slides/index.md --pdf -o slides/slides.pdf
       - run: marp slides/index.md --image png -o slides/slides-thumb.png
