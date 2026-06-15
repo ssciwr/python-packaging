@@ -18,10 +18,11 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v6
       # build the calculate-liam package and store outputs in dist folder
-      - run: pipx run build calculate-liam -o dist
+      - run: uv build calculate-liam -o dist
       # check the files in dist are valid
-      - run: pipx run twine check dist/*
+      - run: uvx twine check dist/*
       # if this commit is tagged, upload the release to (test)PyPI
       - if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -39,9 +40,12 @@ jobs:
         python-version: ["3.10", "3.14"]
     steps:
       - uses: actions/checkout@v6
-      # install the calculate-liam package including the optional test dependencies
-      - run: pip install -e .[test]
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      # install the calculate-liam package including the dev dependencies
+      - run: uv sync
         working-directory: calculate-liam
       # run the test suite
-      - run: pytest -v
-        working-directory: calculate-liam/test
+      - run: uv run pytest -v
+        working-directory: calculate-liam
