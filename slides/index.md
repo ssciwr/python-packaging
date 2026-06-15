@@ -501,11 +501,11 @@ Let's add some new functionality that uses numpy
 
 import numpy as np
 
-def roll_dice(n_dice: int, n_sides: int):
-    return np.random.randint(1, n_sides, n_dice)
-
 def flip_coin():
     return np.random.choice(["Heads", "Tails"])
+
+def roll_dice(n_dice: int, n_sides: int):
+    return np.random.randint(1, n_sides + 1, n_dice)
 ```
 
 ```python
